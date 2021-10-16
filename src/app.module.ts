@@ -5,6 +5,8 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { User } from './users/user.entity';
 import { UsersModule } from './users/users.module';
+import { MessageModule } from './message/message.module';
+import { Message } from './message/message.entity';
 
 @Module({
   imports: [
@@ -17,9 +19,10 @@ import { UsersModule } from './users/users.module';
       username: 'root',
       password: '',
       database: 'makeorg',
-      entities: [User],
+      entities: [Message, User],
       synchronize: true,
     }),
+    MessageModule,
   ],
   controllers: [AppController],
   providers: [AppService],
