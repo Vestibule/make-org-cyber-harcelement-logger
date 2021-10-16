@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { ClassificationWithText } from './analyzeMessages';
 
-export const BODYGUARD_URL = 'https://bamboo.bodyguard.ai/api';
+export const BODYGUARD_URL = 'https://bamboo.bodyguard.ai/api/analyze';
 
 export type BodyguardType = 'HATEFUL' | 'NEUTRAL' | 'SUPPORTIVE';
 
@@ -42,6 +43,11 @@ export type BodyguardClassification =
   | 'SPAM';
 
 export type BodyguardResponse = {
+  data: BodyguardDataResponse[];
+  errors: BodyguardError[];
+};
+
+export type BodyguardDataResponse = {
   text: string;
   reference: string;
   type: BodyguardType;
@@ -56,17 +62,26 @@ export type BodyguardResponse = {
   analyzedAt: string; // '2021-01-14T14:19:41.873Z';
 };
 
-export const bodyguardClient = async (text: string) => {
+export type BodyguardError = {
+  reason: string[];
+  status: string;
+  details: {
+    position: number;
+    limit: number;
+    value: string;
+  };
+};
+
+// TODO: handle case when not every message was processed
+export const bodyguardClient = async (
+  messages: string[],
+): Promise<ClassificationWithText[]> => {
   try {
     const result = await axios.post<BodyguardResponse>(
       BODYGUARD_URL,
       JSON.stringify({
         sourceUid: process.env.BODYGUARD_API_CHANNEL_ID,
-        contents: [
-          {
-            text,
-          },
-        ],
+        contents: messages.map((message) => ({ text: message })),
       }),
       {
         headers: {
@@ -75,7 +90,10 @@ export const bodyguardClient = async (text: string) => {
         },
       },
     );
-    return result.data;
+    return result.data.data.map((bodyguardSingleResponse) => ({
+      text: bodyguardSingleResponse.text,
+      classification: bodyguardSingleResponse.type,
+    }));
   } catch (e) {
     console.log('Error: ', e);
     throw e;

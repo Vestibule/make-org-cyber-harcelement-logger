@@ -1,8 +1,10 @@
-import { Classification } from './analyzeText';
+import { ClassificationWithText } from './analyzeMessages';
 
 export const mockBodyguardClient = async (
-  text: string,
-): Promise<{ type: Classification }> => {
-  console.log('Mock processing of ', text);
-  return { type: 'HATEFUL' };
+  messages: string[],
+): Promise<ClassificationWithText[]> => {
+  return messages.map((message) => ({
+    text: message,
+    classification: 'HATEFUL',
+  }));
 };
