@@ -1,21 +1,18 @@
 import {
   BlockType,
   DetectDocumentTextCommand,
-  DetectDocumentTextCommandInput, DetectDocumentTextCommandOutput,
+  DetectDocumentTextCommandInput,
+  DetectDocumentTextCommandOutput,
   TextractClient,
 } from '@aws-sdk/client-textract';
-import fs from 'fs';
 import { LineWithPosition } from './splitConversation';
 
 export const textractClient = new TextractClient({});
 
-export const extractTextFromDocument = async () => {
-  const testFile = fs.readFileSync(
-    './src/screenshotService/assets/whatsapp.jpeg',
-  );
+export const extractTextFromDocument = async (file: Buffer) => {
   const textractInput: DetectDocumentTextCommandInput = {
     Document: {
-      Bytes: testFile,
+      Bytes: file,
     },
   };
   const command = new DetectDocumentTextCommand(textractInput);
