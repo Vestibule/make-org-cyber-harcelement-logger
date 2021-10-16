@@ -15,20 +15,21 @@ const analyzeScreenshot = async (file: Buffer) => {
   );
   // TODO: improve lines extractions
   const conversation = buildConversation(cleanMessages(messagesWithPosition));
-  const analyzedLines = await analyzeMessages(conversation.sender);
-  if (analyzedLines.some((line) => line.classification === 'HATEFUL')) {
-    console.log('Screenshot WAS considered as inappropriate.');
-    // TODO: implement saveScreenshot
-    await saveScreenshot(file);
-    return;
-  }
-  console.log('Screenshot WAS NOT considered as inappropriate.');
-  return;
+  console.log(conversation);
+  // const analyzedLines = await analyzeMessages(conversation.sender);
+  // if (analyzedLines.some((line) => line.classification === 'HATEFUL')) {
+  //   console.log('Screenshot WAS considered as inappropriate.');
+  //   // TODO: implement saveScreenshot
+  //   await saveScreenshot(file);
+  //   return;
+  // }
+  // console.log('Screenshot WAS NOT considered as inappropriate.');
+  // return;
 };
 
 export const handler = async () => {
   const testFile = fs.readFileSync(
-    './src/screenshotService/assets/whatsapp.jpeg',
+    './src/screenshotService/assets/messenger.jpeg',
   );
   try {
     await analyzeScreenshot(testFile);
