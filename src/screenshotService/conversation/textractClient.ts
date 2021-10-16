@@ -5,7 +5,7 @@ import {
   DetectDocumentTextCommandOutput,
   TextractClient,
 } from '@aws-sdk/client-textract';
-import { LineWithPosition } from './splitConversation';
+import { MessageWithPosition } from '../types';
 
 export const textractClient = new TextractClient({});
 
@@ -19,9 +19,9 @@ export const extractTextFromDocument = async (file: Buffer) => {
   return textractClient.send(command);
 };
 
-export const convertTextractOutputToLinesWithPosition = (
+export const convertTextractOutputToMessagesWithPosition = (
   data: DetectDocumentTextCommandOutput,
-): LineWithPosition[] => {
+): MessageWithPosition[] => {
   return data.Blocks.filter(
     (block) => block.BlockType === BlockType.LINE && block.Geometry.BoundingBox,
   ).map((block) => ({

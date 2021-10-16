@@ -1,30 +1,35 @@
 import {
-  convertTextractOutputToLinesWithPosition,
+  convertTextractOutputToMessagesWithPosition,
   extractTextFromDocument,
-} from './textractClient';
+} from './conversation/textractClient';
 import { analyzeMessages } from '../bodyguardService/analyzeMessages';
-import fs from 'fs';
+import * as fs from 'fs';
 import { saveScreenshot } from './saveScreenshot';
+import { buildConversation } from './conversation/buildConversation';
+import { cleanMessages } from './conversation/cleanMessages';
 
 const analyzeScreenshot = async (file: Buffer) => {
   const data = await extractTextFromDocument(file);
-  const linesWithPosition = convertTextractOutputToLinesWithPosition(data);
-  // TODO: improve lines extractions
-  const analyzedLines = await analyzeMessages(
-    linesWithPosition.map((line) => line.text),
+  const messagesWithPosition = convertTextractOutputToMessagesWithPosition(
+    data,
   );
-  if (analyzedLines.some((line) => line.classification === 'HATEFUL')) {
-    console.log('Screenshot WAS considered as inappropriate.');
-    await saveScreenshot(file);
-    return;
-  }
-  console.log('Screenshot WAS NOT considered as inappropriate.');
-  return;
+  // TODO: improve lines extractions
+  const conversation = buildConversation(cleanMessages(messagesWithPosition));
+  console.log(conversation);
+  // const analyzedLines = await analyzeMessages(conversation.sender);
+  // if (analyzedLines.some((line) => line.classification === 'HATEFUL')) {
+  //   console.log('Screenshot WAS considered as inappropriate.');
+  //   // TODO: implement saveScreenshot
+  //   await saveScreenshot(file);
+  //   return;
+  // }
+  // console.log('Screenshot WAS NOT considered as inappropriate.');
+  // return;
 };
 
 export const handler = async () => {
   const testFile = fs.readFileSync(
-    './src/screenshotService/assets/whatsapp.jpeg',
+    './src/screenshotService/assets/messenger.jpeg',
   );
   try {
     await analyzeScreenshot(testFile);
