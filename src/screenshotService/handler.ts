@@ -8,7 +8,9 @@ import { analyzeMessages } from '../bodyguardService/analyzeMessages';
 import { saveScreenshot } from './saveScreenshot';
 
 const analyzeScreenshot = async (file: Buffer) => {
+  console.log('Analysis start');
   const data = await extractTextFromDocument(file);
+  console.log('Extracted phrases');
   const messagesWithPosition = convertTextractOutputToMessagesWithPosition(
     data,
   );
@@ -31,7 +33,9 @@ const analyzeScreenshot = async (file: Buffer) => {
 };
 
 export const handler = async (screenshot: string) => {
+  console.log('Start.');
   const file = Buffer.from(screenshot, 'base64');
+  console.log('Buffer created');
   try {
     await analyzeScreenshot(file);
   } catch (error) {
