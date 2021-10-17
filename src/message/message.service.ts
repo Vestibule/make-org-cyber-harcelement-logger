@@ -14,4 +14,7 @@ export class MessageService {
 
     return this.messagesRepository.save(messageEntity);
   }
+  async findOne(message: string) {
+    return this.messagesRepository.findOne({ body: message });
+  }
 }
