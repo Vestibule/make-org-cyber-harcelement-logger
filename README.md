@@ -1,4 +1,8 @@
-# Description
+# How does it work?
+- Set environment variables: AWS credentials (`textractClient.ts`), Postgres DB credentials (`app.module.ts`), server address (in Android app)
+- Launch the server (with Serverless, EC2...) with: `yarn start:dev`
+- Launch the app on an Android phone (using Android Studio for instance). 
+The app will intercept any notification ad send it to the server. You also can also share screenshots through the app
 
 
 # App
