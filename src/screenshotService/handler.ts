@@ -8,8 +8,8 @@ import { saveScreenshot } from './saveScreenshot';
 import { buildConversation } from './conversation/buildConversation';
 import { cleanMessages } from './conversation/cleanMessages';
 
-const analyzeScreenshot = async (file: Buffer) => {
-  const data = await extractTextFromDocument(file);
+const analyzeScreenshot = async (file: string) => {
+  const data = await extractTextFromDocument(Buffer.from(file, 'binary'));
   const messagesWithPosition = convertTextractOutputToMessagesWithPosition(
     data,
   );
@@ -27,7 +27,7 @@ const analyzeScreenshot = async (file: Buffer) => {
   // return;
 };
 
-export const handler = async (screenshot) => {
+export const handler = async (screenshot: string) => {
   console.log('HAHAAHAH');
   console.log(typeof screenshot);
 
