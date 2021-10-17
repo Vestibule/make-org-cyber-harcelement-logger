@@ -18,7 +18,7 @@ import { Message } from './message/message.entity';
       port: 5432,
       username: 'postgres',
       password: 'Kt6DcWAhoJCR',
-      database: 'makeorg',
+      database: 'postgres',
       entities: [Message, User],
       synchronize: true,
     }),
