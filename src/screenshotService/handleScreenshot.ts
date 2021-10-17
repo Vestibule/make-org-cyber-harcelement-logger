@@ -18,7 +18,7 @@ const analyzeScreenshot = async (file: Buffer) => {
   return displayWarning(analyzedLines);
 };
 
-export const handler = async (screenshot: string) => {
+export const handleScreenshot = async (screenshot: string) => {
   console.log('Start.');
   const file = Buffer.from(screenshot, 'base64');
   console.log('Buffer created');

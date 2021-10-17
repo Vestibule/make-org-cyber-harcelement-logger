@@ -9,9 +9,10 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { handler } from 'src/screenshotService/handler';
+import { handleScreenshot } from 'src/screenshotService/handleScreenshot';
 import { MessageService } from './message.service';
 import { displayWarning } from '../bodyguardService/displayWarning';
+import { analyzeMessages } from '../bodyguardService/analyzeMessages';
 
 @Controller('message')
 export class MessageController {
@@ -20,8 +21,14 @@ export class MessageController {
   @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() message, @Req() req) {
-    displayWarning([message.body]);
-    return this.messageService.save({ ...message, userId: req.user.userId });
+    console.log('Received notification: ', message);
+    const analyzedLines = await analyzeMessages([message.body]);
+    displayWarning(analyzedLines);
+    return this.messageService.save({
+      ...message,
+      userId: req.user.userId,
+      sender: message.sender || message.title,
+    });
   }
 
   @UseGuards(JwtAuthGuard)
@@ -31,7 +38,7 @@ export class MessageController {
     @UploadedFile() screenshot: Express.Multer.File,
     @Req() req,
   ) {
-    handler(req.body.screenshot);
+    handleScreenshot(req.body.screenshot);
     return null;
   }
 }
