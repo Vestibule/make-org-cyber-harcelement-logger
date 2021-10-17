@@ -9,16 +9,20 @@ import android.os.Parcelable
 import android.util.Base64
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.google.gson.Gson
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import okio.BufferedSink
 import okio.ByteString.Companion.readByteString
 import okio.Okio
 import okio.Source
 import okio.source
+import org.ncc.monallienumerique.JSON
 import java.io.File
 import java.io.InputStream
+
 
 class ShareFileActivity : AppCompatActivity() {
     private val client = OkHttpClient()
@@ -59,17 +63,13 @@ class ShareFileActivity : AppCompatActivity() {
             // val file = File(imageUri.path!!);
             Log.i("NCC - size", inputStream.available().toString())
 
-            val formBody = MultipartBody.Builder().setType(MultipartBody.FORM)
-                .addFormDataPart("screenshot", "test.png", body=inputStream.asRequestBody("image/png".toMediaTypeOrNull()))
-                .build() // body=file.asRequestBody("image/png".toMediaTypeOrNull())).build()
-
-            Log.i("NCC - body", formBody.parts.toString())
-            Log.i("NCC - body", formBody.size.toString())
-
+            val dictionary = Gson().toJson(mapOf("screenshot" to inputStream.asRequestBody("image/png".toMediaTypeOrNull())))
+            val body = RequestBody.create("application/json; charset=utf-8".toMediaTypeOrNull(), dictionary);
             val request = Request.Builder()
                 .url("http://ec2-35-180-193-101.eu-west-3.compute.amazonaws.com:3000/message/screenshot")
                 .addHeader("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZvb0BiYXIuYmF6Iiwic3ViIjo2LCJpYXQiOjE2MzQ0NTg4MjYsImV4cCI6MTY2NTk5NDgyNn0.8ZEnhCy25dkYNCG-F0Ag0HRXjEfTaRZle8vBcY_5afk")
-                .post(formBody)
+                .addHeader("Content-Transfer-Encoding", "base64")
+                .post(body)
                 .build()
 
             try {
@@ -85,16 +85,10 @@ class ShareFileActivity : AppCompatActivity() {
 }
 
 
-fun InputStream.asRequestBody(contentType: MediaType? = null): RequestBody {
+fun InputStream.asRequestBody(contentType: MediaType? = null): String {
     val fileContent = this.readBytes();
     val encodedFileContent = Base64.encodeToString(fileContent, Base64.DEFAULT);
-    return object : RequestBody() {
-        override fun contentType() = contentType
+    Log.i("NCC - display file", encodedFileContent);
+    return encodedFileContent
 
-        override fun contentLength() = encodedFileContent.length.toLong()
-
-        override fun writeTo(sink: BufferedSink) {
-            sink.write(encodedFileContent.toByteArray());
-        }
-    }
 }
