@@ -7,13 +7,19 @@ import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import androidx.annotation.RequiresApi
 import android.util.Log
+import androidx.annotation.WorkerThread
 import androidx.core.app.NotificationCompat
+import com.google.gson.Gson
+import com.google.gson.annotations.SerializedName
+import okhttp3.Headers
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.internal.addHeaderLenient
 import java.io.IOException
+import java.util.*
 
 
 val JSON = "application/json; charset=utf-8".toMediaType()
@@ -47,8 +53,6 @@ class NotificationListenerExampleService : NotificationListenerService() {
         const val GOOGLE_CHAT_PACK_NAME = "com.google.android.apps.dynamite"
     }
 
-    private val client = OkHttpClient()
-
     object InterceptedNotificationCode {
         const val FACEBOOK_CODE = 1
         const val WHATSAPP_CODE = 2
@@ -56,6 +60,8 @@ class NotificationListenerExampleService : NotificationListenerService() {
         const val GOOGLE_CHAT_CODE = 4
         const val OTHER_NOTIFICATIONS_CODE = 5 // We ignore all notification with code == 4
     }
+
+    private val client = OkHttpClient()
 
     override fun onNotificationPosted(sbn: StatusBarNotification) {
         val notificationCode = processNotification(sbn)
@@ -68,7 +74,6 @@ class NotificationListenerExampleService : NotificationListenerService() {
     override fun onNotificationRemoved(sbn: StatusBarNotification) {
         val notificationCode = processNotification(sbn)
 
-//        if(notificationCode == InterceptedNotificationCode.OTHER_NOTIFICATIONS_CODE)  return;
         val activeNotifications = this.activeNotifications
         if (activeNotifications != null && activeNotifications.isNotEmpty()) {
             for (i in activeNotifications.indices) {
@@ -82,7 +87,13 @@ class NotificationListenerExampleService : NotificationListenerService() {
         }
     }
 
-    data class NotificationDetails(val sourceApp: String, val title: String? = null, val content: String? = null, val author: String? = null) {
+    data class NotificationDetails(
+            @SerializedName("app") val sourceApp: String,
+            val title: String? = null,
+            @SerializedName("body") val content: String? = null,
+            @SerializedName("sender") val author: String? = null,
+            @SerializedName("receivedAt") val receivedAt: Date = Calendar.getInstance().time
+    ) {
 
         companion object {
             fun fromSbn(sbn: StatusBarNotification): NotificationDetails {
@@ -110,7 +121,7 @@ class NotificationListenerExampleService : NotificationListenerService() {
 
         fun isEmpty() = title.isNullOrEmpty() || author.isNullOrEmpty();
         fun toRequestBody(): RequestBody {
-            return "TODO".toRequestBody(JSON)
+            return Gson().toJson(this).toRequestBody(JSON)
         }
     }
 
@@ -141,23 +152,31 @@ class NotificationListenerExampleService : NotificationListenerService() {
 
         }
 
-        if (appCode != InterceptedNotificationCode.OTHER_NOTIFICATIONS_CODE) {
+        if (appCode != InterceptedNotificationCode.OTHER_NOTIFICATIONS_CODE &&
+                !notificationDetails.isEmpty()) {
             pushContent(notificationDetails)
         }
 
         return appCode;
     }
 
+    private val bearerToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZvb0BiYXIuYmF6Iiwic3ViIjo2LCJpYXQiOjE2MzQ0NTg4MjYsImV4cCI6MTY2NTk5NDgyNn0.8ZEnhCy25dkYNCG-F0Ag0HRXjEfTaRZle8vBcY_5afk"
+    private val host = "ec2-user@ec2-35-180-193-101.eu-west-3.compute.amazonaws.com"
+    private val port = 3000
 
     private fun pushContent(content: NotificationDetails) {
         val body = content.toRequestBody()
         val request = Request.Builder()
-                .url("TODO url")
+                .url("http://$host:$port/message")
+                .addHeader("Authorization", "Bearer $bearerToken")
                 .post(body)
                 .build()
         try {
-            val response = client.newCall(request).execute();
-            Log.i("NCC", response.body.toString())
+            Thread {
+                val response = client.newCall(request).execute();
+                Log.i("NCC", "${response.code}: ${response.message}")
+            }.start()
+
         } catch (e: IOException) {
             Log.e("NCC", e.toString(), e)
         }
