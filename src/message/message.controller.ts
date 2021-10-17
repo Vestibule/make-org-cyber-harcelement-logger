@@ -23,7 +23,7 @@ export class MessageController {
   async create(@Body() message, @Req() req) {
     console.log('Received notification: ', message);
     const analyzedLines = await analyzeMessages([message.body]);
-    displayWarning(analyzedLines);
+    displayWarning(analyzedLines, 'notification');
     return this.messageService.save({
       ...message,
       userId: req.user.userId,

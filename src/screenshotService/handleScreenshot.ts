@@ -1,4 +1,7 @@
-import { convertTextractOutputToMessagesWithPosition, extractTextFromDocument } from './conversation/textractClient';
+import {
+  convertTextractOutputToMessagesWithPosition,
+  extractTextFromDocument,
+} from './conversation/textractClient';
 import { buildConversation } from './conversation/buildConversation';
 import { cleanMessages } from './conversation/cleanMessages';
 import { analyzeMessages } from '../bodyguardService/analyzeMessages';
@@ -15,7 +18,7 @@ const analyzeScreenshot = async (file: Buffer) => {
   const conversation = buildConversation(cleanMessages(messagesWithPosition));
   console.log('Extracted conversation: ', conversation);
   const analyzedLines = await analyzeMessages(conversation.sender);
-  return displayWarning(analyzedLines);
+  return displayWarning(analyzedLines, 'screenshot');
 };
 
 export const handleScreenshot = async (screenshot: string) => {
