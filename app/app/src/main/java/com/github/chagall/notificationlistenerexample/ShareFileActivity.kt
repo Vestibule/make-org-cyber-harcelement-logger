@@ -56,6 +56,9 @@ class ShareFileActivity : AppCompatActivity() {
 
             val formBody = MultipartBody.Builder().setType(MultipartBody.FORM).addFormDataPart("screenshot", null, body=inputStream.asRequestBody()).build()
 
+            Log.i("NCC - body", formBody.parts.toString())
+            Log.i("NCC - body", formBody.size.toString())
+
             val request = Request.Builder()
                 .url("http://ec2-35-180-193-101.eu-west-3.compute.amazonaws.com:3000/message/screenshot")
                 .addHeader("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZvb0BiYXIuYmF6Iiwic3ViIjo2LCJpYXQiOjE2MzQ0NTg4MjYsImV4cCI6MTY2NTk5NDgyNn0.8ZEnhCy25dkYNCG-F0Ag0HRXjEfTaRZle8vBcY_5afk")
