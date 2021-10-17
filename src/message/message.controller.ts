@@ -21,10 +21,6 @@ export class MessageController {
   @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() message, @Req() req) {
-    const foundMessage = await this.messageService.findOne(message.body);
-    if (foundMessage) {
-      return;
-    }
     console.log('Received notification: ', message);
     const analyzedLines = await analyzeMessages([message.body]);
     displayWarning(analyzedLines, 'notification');
