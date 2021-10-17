@@ -4,13 +4,16 @@ import {
 } from './conversation/textractClient';
 import { buildConversation } from './conversation/buildConversation';
 import { cleanMessages } from './conversation/cleanMessages';
-import { fromBuffer } from 'file-type';
 
 const analyzeScreenshot = async (file: Buffer) => {
+  console.log('start analysis');
   const data = await extractTextFromDocument(file);
+  console.log('data', data);
   const messagesWithPosition = convertTextractOutputToMessagesWithPosition(
     data,
   );
+  console.log('messageswithposition', messagesWithPosition);
+
   // TODO: improve lines extractions
   const conversation = buildConversation(cleanMessages(messagesWithPosition));
   console.log(conversation);
