@@ -1,4 +1,4 @@
-package com.github.chagall.notificationlistenerexample
+package org.ncc.monallienumerique
 
 import android.content.Intent
 import android.net.Uri
