@@ -27,7 +27,7 @@ const analyzeScreenshot = async (file: Buffer) => {
 
 export const handler = async (screenshot: string) => {
   console.log('HAHAAHAH');
-  console.log(typeof screenshot);
+  console.log('convert to buffer ');
   const file = Buffer.from(screenshot, 'binary');
   console.log(await fromBuffer(file));
   try {
