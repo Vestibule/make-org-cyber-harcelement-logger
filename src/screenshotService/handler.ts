@@ -4,6 +4,7 @@ import {
 } from './conversation/textractClient';
 import { buildConversation } from './conversation/buildConversation';
 import { cleanMessages } from './conversation/cleanMessages';
+import { fromBuffer } from 'file-type';
 
 const analyzeScreenshot = async (file: Buffer) => {
   const data = await extractTextFromDocument(file);
@@ -27,6 +28,7 @@ const analyzeScreenshot = async (file: Buffer) => {
 export const handler = async (screenshot: Buffer) => {
   console.log('HAHAAHAH');
   console.log(screenshot);
+  console.log(await fromBuffer(screenshot));
   try {
     await analyzeScreenshot(screenshot);
   } catch (error) {
