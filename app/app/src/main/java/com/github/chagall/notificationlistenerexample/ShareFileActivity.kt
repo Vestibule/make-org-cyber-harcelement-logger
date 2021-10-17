@@ -2,13 +2,18 @@ package com.github.chagall.notificationlistenerexample
 
 import android.content.Intent
 import android.net.Uri
+import java.net.URI
+
 import android.os.Bundle
 import android.os.Parcelable
+import android.util.Base64
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
 import okio.BufferedSink
+import okio.ByteString.Companion.readByteString
 import okio.Okio
 import okio.Source
 import okio.source
@@ -32,7 +37,6 @@ class ShareFileActivity : AppCompatActivity() {
             }
         } else if (Intent.ACTION_SEND_MULTIPLE == action && type != null) {
             if (type.startsWith("image/")) {
-                handleSendMultipleImages(intent) // Handle multiple images being sent
             }
         } else {
             // Handle other intents, such as being started from the home screen
@@ -52,9 +56,12 @@ class ShareFileActivity : AppCompatActivity() {
             // Update UI to reflect image being shared
             Log.i("NCC - path", imageUri.path.toString())
             val inputStream = contentResolver.openInputStream(imageUri)!!
-            Log.i("NCC - size", inputStream?.available().toString())
+            // val file = File(imageUri.path!!);
+            Log.i("NCC - size", inputStream.available().toString())
 
-            val formBody = MultipartBody.Builder().setType(MultipartBody.FORM).addFormDataPart("screenshot", null, body=inputStream.asRequestBody()).build()
+            val formBody = MultipartBody.Builder().setType(MultipartBody.FORM)
+                .addFormDataPart("screenshot", "test.png", body=inputStream.asRequestBody("image/png".toMediaTypeOrNull()))
+                .build() // body=file.asRequestBody("image/png".toMediaTypeOrNull())).build()
 
             Log.i("NCC - body", formBody.parts.toString())
             Log.i("NCC - body", formBody.size.toString())
@@ -75,23 +82,19 @@ class ShareFileActivity : AppCompatActivity() {
             }
         }
     }
-
-    fun handleSendMultipleImages(intent: Intent) {
-        val imageUris = intent.getParcelableArrayListExtra<Uri>(Intent.EXTRA_STREAM)
-        if (imageUris != null) {
-            // Update UI to reflect multiple images being shared
-        }
-    }
 }
 
+
 fun InputStream.asRequestBody(contentType: MediaType? = null): RequestBody {
+    val fileContent = this.readBytes();
+    val encodedFileContent = Base64.encodeToString(fileContent, Base64.DEFAULT);
     return object : RequestBody() {
         override fun contentType() = contentType
 
-        override fun contentLength() = available().toLong()
+        override fun contentLength() = encodedFileContent.length.toLong()
 
         override fun writeTo(sink: BufferedSink) {
-                source().use { source -> sink.writeAll(source) }
+            sink.write(encodedFileContent.toByteArray());
         }
     }
 }

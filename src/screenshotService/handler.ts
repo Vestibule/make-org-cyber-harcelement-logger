@@ -28,7 +28,8 @@ const analyzeScreenshot = async (file: Buffer) => {
 export const handler = async (screenshot: string) => {
   console.log('HAHAAHAH');
   console.log('convert to buffer ');
-  const file = Buffer.from(screenshot, 'binary');
+  console.log(screenshot);
+  const file = Buffer.from(screenshot, 'base64');
   console.log(await fromBuffer(file));
   try {
     await analyzeScreenshot(file);
