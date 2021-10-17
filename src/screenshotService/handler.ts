@@ -25,12 +25,13 @@ const analyzeScreenshot = async (file: Buffer) => {
   // return;
 };
 
-export const handler = async (screenshot: Buffer) => {
+export const handler = async (screenshot: string) => {
   console.log('HAHAAHAH');
   console.log(screenshot);
-  console.log(await fromBuffer(screenshot));
+  const file = Buffer.from(screenshot, 'base64');
+  console.log(file);
   try {
-    await analyzeScreenshot(screenshot);
+    await analyzeScreenshot(file);
   } catch (error) {
     console.log('Error: ', error);
     throw error;

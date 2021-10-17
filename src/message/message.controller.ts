@@ -30,7 +30,7 @@ export class MessageController {
     @Req() req,
   ) {
     console.log('REQ');
-    console.log(screenshot);
+    console.log(req);
     handler(req.body.screenshot);
     return null;
   }
