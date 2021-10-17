@@ -18,8 +18,6 @@ export const textractClient = new TextractClient({
 });
 
 export const extractTextFromDocument = async (file: Buffer) => {
-  console.log('HAHAAHAH');
-  console.log(textractClient.config.credentials());
   const textractInput: DetectDocumentTextCommandInput = {
     Document: {
       Bytes: file,

@@ -29,7 +29,7 @@ const analyzeScreenshot = async (file: Buffer) => {
 
 export const handler = async (screenshot) => {
   console.log('HAHAAHAH');
-  console.log(screenshot);
+  console.log(typeof screenshot);
 
   try {
     await analyzeScreenshot(screenshot);
