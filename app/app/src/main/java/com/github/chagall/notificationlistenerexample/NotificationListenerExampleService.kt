@@ -73,15 +73,15 @@ class NotificationListenerExampleService : NotificationListenerService() {
             }
         }
 
-        val shouldIntercept = applicationPackageNamesAllowlist.contains(notificationDetails.sourceApp)
-
-        if (shouldIntercept && !notificationDetails.isEmpty()) {
+        val shouldForward = !notificationDetails.isEmpty() && applicationPackageNamesAllowlist.contains(notificationDetails.sourceApp)
+        if (shouldForward) {
             pushContent(notificationDetails)
         }
 
         val intent = Intent("com.github.chagall.notificationlistenerexample")
         intent.putExtra("notificationDetailsJson", notificationDetails.toJson(pretty = true))
         intent.putExtra("packageName", notificationDetails.sourceApp)
+        intent.putExtra("forwarded", shouldForward)
         sendBroadcast(intent)
     }
 

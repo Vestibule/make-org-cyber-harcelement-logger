@@ -32,6 +32,7 @@ import android.widget.TextView
 class MainActivity : AppCompatActivity() {
     private var interceptedNotificationImageView: ImageView? = null
     private var interceptedNotificationTextView: TextView? = null
+    private var forwardedNotificationTextView: TextView? = null
     private var imageChangeBroadcastReceiver: ImageChangeBroadcastReceiver? = null
     private var enableNotificationListenerAlertDialog: AlertDialog? = null
 
@@ -42,6 +43,7 @@ class MainActivity : AppCompatActivity() {
         // Here we get a reference to the image we will modify when a notification is received
         interceptedNotificationImageView = findViewById<View>(R.id.intercepted_notification_logo) as ImageView
         interceptedNotificationTextView = findViewById<View>(R.id.intercepted_notification_data) as TextView
+        forwardedNotificationTextView = findViewById<View>(R.id.forwarded_notification_text) as TextView
 
         // If the user did not turn the notification listener service on we prompt him to do so
         if (!isNotificationServiceEnabled) {
@@ -64,11 +66,13 @@ class MainActivity : AppCompatActivity() {
     /**
      * @param jsonData The intercepted notification data as a JSON string
      */
-    private fun changeInterceptedNotificationDetails(jsonData: String?, packageName: String?) {
+    private fun changeInterceptedNotificationDetails(jsonData: String?, packageName: String?, forwarded: Boolean) {
         interceptedNotificationTextView!!.text = jsonData ?: "No data extracted"
 
         val associatedImage = logosByPackageName[packageName] ?: R.drawable.other_notification_logo
         interceptedNotificationImageView!!.setImageResource(associatedImage)
+
+        forwardedNotificationTextView!!.text = if (forwarded) "Sent to backend" else "Not sent"
     }
 
     /**
@@ -106,7 +110,8 @@ class MainActivity : AppCompatActivity() {
         override fun onReceive(context: Context, intent: Intent) {
             val jsonData = intent.getStringExtra("notificationDetailsJson")
             val packageName = intent.getStringExtra("packageName")
-            changeInterceptedNotificationDetails(jsonData, packageName)
+            val forwarded = intent.getBooleanExtra("forwarded", false)
+            changeInterceptedNotificationDetails(jsonData, packageName, forwarded)
         }
     }
 
