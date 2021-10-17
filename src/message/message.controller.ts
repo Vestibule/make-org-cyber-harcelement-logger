@@ -23,7 +23,7 @@ export class MessageController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(FileInterceptor('screenshot'))
+  @UseInterceptors(FileInterceptor(''))
   @Post('screenshot')
   async screenshot(@UploadedFile() screenshot: Express.Multer.File) {
     handler(screenshot);
