@@ -11,6 +11,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { handler } from 'src/screenshotService/handler';
 import { MessageService } from './message.service';
+import { displayWarning } from '../bodyguardService/displayWarning';
 
 @Controller('message')
 export class MessageController {
@@ -19,6 +20,7 @@ export class MessageController {
   @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() message, @Req() req) {
+    displayWarning([message.body]);
     return this.messageService.save({ ...message, userId: req.user.userId });
   }
 

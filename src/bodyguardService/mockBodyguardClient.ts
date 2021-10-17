@@ -3,7 +3,7 @@ import { ClassificationWithText } from './analyzeMessages';
 const BAD_WORDS = ['connard', 'salaud', 'suicid', 'fdp'];
 
 const classifyMessage = (message: string) => {
-  if (BAD_WORDS.some((badWord) => message.includes(badWord))) {
+  if (BAD_WORDS.some((badWord) => message.toLowerCase().includes(badWord))) {
     return 'HATEFUL';
   }
   return 'NEUTRAL';
