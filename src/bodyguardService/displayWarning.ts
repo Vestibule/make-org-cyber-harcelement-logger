@@ -16,10 +16,12 @@ export const displayWarning = (
       'Inappropriate messages were: ',
       inappropriateMessages.map((message) => message.text),
     );
+    console.log('-----------');
     return;
   }
   console.log(
     `✅ ${capitalize(fileType)} WAS NOT considered as inappropriate. ✅`,
   );
+  console.log('-----------');
   return;
 };
