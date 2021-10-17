@@ -1,5 +1,7 @@
 # Mon Allié Numérique mobile app  
 
+## Overview
+
 This app was built for the Jan 2021 Nuit du Code Citoyen Hackathon with [make.org](http://make.org) 
 and [e-enfance](https://www.e-enfance.org/).
 
@@ -28,3 +30,14 @@ https://github.com/Chagall/notification-listener-service-example
 Overall, trying to monitor notifications this way works a bit, but it's brittle, unreliable, and
 will require constant work to especially if we're trying to parse structured data out of the
 notification
+
+## How to try it
+
+- Install Android Studio, open the project
+- Set up a server, by looking at the instructions in the server repo
+- In the source code, update the auth info, the server URL etc. in the
+  [service](java/org/ncc/monallienumerique/NotificationListenerExampleService.kt) source.  
+- Plugin an Android device, and from Android Studio, build and run the app.
+- Try to receive a notification from some supported chat app.
+- Take a screenshot, then share it to with the app.
+- Look at the server logs for results.
