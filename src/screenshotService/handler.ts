@@ -4,7 +4,6 @@ import {
 } from './conversation/textractClient';
 import { buildConversation } from './conversation/buildConversation';
 import { cleanMessages } from './conversation/cleanMessages';
-import { fromBuffer } from 'file-type';
 
 const analyzeScreenshot = async (file: Buffer) => {
   const data = await extractTextFromDocument(file);
@@ -25,14 +24,11 @@ const analyzeScreenshot = async (file: Buffer) => {
   // return;
 };
 
-export const handler = async (screenshot: string) => {
+export const handler = async (screenshot: Buffer) => {
   console.log('HAHAAHAH');
-  console.log('convert to buffer ');
   console.log(screenshot);
-  const file = Buffer.from(screenshot, 'base64');
-  console.log(await fromBuffer(file));
   try {
-    await analyzeScreenshot(file);
+    await analyzeScreenshot(screenshot);
   } catch (error) {
     console.log('Error: ', error);
     throw error;
