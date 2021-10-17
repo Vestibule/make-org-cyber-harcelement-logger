@@ -22,7 +22,11 @@ export class MessageController {
   async create(@Body() message, @Req() req) {
     console.log('Received notification: ', message);
     displayWarning([message.body]);
-    return this.messageService.save({ ...message, userId: req.user.userId });
+    return this.messageService.save({
+      ...message,
+      userId: req.user.userId,
+      sender: message.body.sender || message.body.title,
+    });
   }
 
   @UseGuards(JwtAuthGuard)
