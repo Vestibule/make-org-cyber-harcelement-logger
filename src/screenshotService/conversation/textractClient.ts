@@ -6,10 +6,20 @@ import {
   TextractClient,
 } from '@aws-sdk/client-textract';
 import { MessageWithPosition } from '../types';
+import { config } from 'dotenv';
+config();
 
-export const textractClient = new TextractClient({});
+export const textractClient = new TextractClient({
+  credentials: {
+    secretAccessKey: process.env.AWS_SECRET,
+    accessKeyId: process.env.AWS_KEY_ID,
+  },
+  region: 'eu-west-3',
+});
 
 export const extractTextFromDocument = async (file: Buffer) => {
+  console.log('HAHAAHAH');
+  console.log(textractClient.config.credentials());
   const textractInput: DetectDocumentTextCommandInput = {
     Document: {
       Bytes: file,
