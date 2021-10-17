@@ -10,8 +10,9 @@ import { cleanMessages } from './conversation/cleanMessages';
 
 const analyzeScreenshot = async (file: Buffer) => {
   const data = await extractTextFromDocument(file);
-  const messagesWithPosition =
-    convertTextractOutputToMessagesWithPosition(data);
+  const messagesWithPosition = convertTextractOutputToMessagesWithPosition(
+    data,
+  );
   // TODO: improve lines extractions
   const conversation = buildConversation(cleanMessages(messagesWithPosition));
   console.log(conversation);
@@ -31,7 +32,7 @@ export const handler = async (screenshot) => {
   console.log(screenshot);
 
   try {
-    await analyzeScreenshot(screenshot.buffer);
+    await analyzeScreenshot(screenshot);
   } catch (error) {
     console.log('Error: ', error);
     throw error;

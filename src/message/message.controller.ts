@@ -29,8 +29,8 @@ export class MessageController {
     @UploadedFile() screenshot: Express.Multer.File,
     @Req() req,
   ) {
-    console.log('REQUETE: ', req);
-    handler(screenshot);
+    console.log('REQUETE: ', req.body.screenshot);
+    handler(req.body.screenshot);
     return null;
   }
 }
