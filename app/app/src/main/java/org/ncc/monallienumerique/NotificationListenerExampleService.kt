@@ -108,7 +108,7 @@ data class NotificationDetails(
         }
     }
 
-    fun isEmpty() = title.isNullOrEmpty() || author.isNullOrEmpty()
+    fun isEmpty() = title.isNullOrEmpty() && content.isNullOrEmpty()
 
     fun toJson(pretty: Boolean = false): String {
         val builder = GsonBuilder()
