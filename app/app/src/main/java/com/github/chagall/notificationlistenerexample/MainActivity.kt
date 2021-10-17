@@ -3,15 +3,12 @@ package com.github.chagall.notificationlistenerexample
 import android.app.AlertDialog
 import android.content.*
 import androidx.appcompat.app.AppCompatActivity
-import com.github.chagall.notificationlistenerexample.MainActivity.ImageChangeBroadcastReceiver
 import android.os.Bundle
 import android.provider.Settings
-import com.github.chagall.notificationlistenerexample.R
-import com.github.chagall.notificationlistenerexample.NotificationListenerExampleService
-import com.github.chagall.notificationlistenerexample.MainActivity
 import android.text.TextUtils
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 
 /**
  * MIT License
@@ -34,14 +31,17 @@ import android.widget.ImageView
  */
 class MainActivity : AppCompatActivity() {
     private var interceptedNotificationImageView: ImageView? = null
+    private var interceptedNotificationTextView: TextView? = null
     private var imageChangeBroadcastReceiver: ImageChangeBroadcastReceiver? = null
     private var enableNotificationListenerAlertDialog: AlertDialog? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         // Here we get a reference to the image we will modify when a notification is received
         interceptedNotificationImageView = findViewById<View>(R.id.intercepted_notification_logo) as ImageView
+        interceptedNotificationTextView = findViewById<View>(R.id.intercepted_notification_data) as TextView
 
         // If the user did not turn the notification listener service on we prompt him to do so
         if (!isNotificationServiceEnabled) {
@@ -62,18 +62,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Change Intercepted Notification Image
-     * Changes the MainActivity image based on which notification was intercepted
-     * @param notificationCode The intercepted notification code
+     * @param jsonData The intercepted notification data as a JSON string
      */
-    private fun changeInterceptedNotificationImage(notificationCode: Int) {
-        when (notificationCode) {
-            NotificationListenerExampleService.InterceptedNotificationCode.FACEBOOK_CODE -> interceptedNotificationImageView!!.setImageResource(R.drawable.facebook_logo)
-            NotificationListenerExampleService.InterceptedNotificationCode.INSTAGRAM_CODE -> interceptedNotificationImageView!!.setImageResource(R.drawable.instagram_logo)
-            NotificationListenerExampleService.InterceptedNotificationCode.WHATSAPP_CODE -> interceptedNotificationImageView!!.setImageResource(R.drawable.whatsapp_logo)
-            NotificationListenerExampleService.InterceptedNotificationCode.OTHER_NOTIFICATIONS_CODE -> interceptedNotificationImageView!!.setImageResource(R.drawable.other_notification_logo)
-            else -> println("Fallthrough with code: $notificationCode")
-        }
+    private fun changeInterceptedNotificationDetails(jsonData: String?, packageName: String?) {
+        interceptedNotificationTextView!!.text = jsonData ?: "No data extracted"
+
+        val associatedImage = logosByPackageName[packageName] ?: R.drawable.other_notification_logo
+        interceptedNotificationImageView!!.setImageResource(associatedImage)
     }
 
     /**
@@ -109,8 +104,9 @@ class MainActivity : AppCompatActivity() {
      */
     inner class ImageChangeBroadcastReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            val receivedNotificationCode = intent.getIntExtra("Notification Code", -1)
-            changeInterceptedNotificationImage(receivedNotificationCode)
+            val jsonData = intent.getStringExtra("notificationDetailsJson")
+            val packageName = intent.getStringExtra("packageName")
+            changeInterceptedNotificationDetails(jsonData, packageName)
         }
     }
 
@@ -137,5 +133,13 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val ENABLED_NOTIFICATION_LISTENERS = "enabled_notification_listeners"
         private const val ACTION_NOTIFICATION_LISTENER_SETTINGS = "android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"
+
+        private val logosByPackageName = mapOf(
+                "com.facebook.katana" to R.drawable.facebook_logo,
+                "com.facebook.orca" to R.drawable.facebook_logo,
+                "com.whatsapp" to R.drawable.whatsapp_logo,
+                "com.instagram.android" to R.drawable.instagram_logo,
+        )
+
     }
 }

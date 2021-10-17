@@ -20,19 +20,27 @@
         android:typeface="monospace"
         android:textAlignment="center" />
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
         android:id="@+id/intercepted_notification_logo_container">
 
         <ImageView
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:id="@+id/intercepted_notification_logo"
             android:src="@drawable/notification_logo"
-            android:contentDescription="@string/notification_logo"
-            android:layout_gravity="center" />
+            android:contentDescription="@string/notification_logo" />
 
-    </FrameLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/intercepted_notification_data"
+            android:layout_marginTop="18.5dp"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
 
 </LinearLayout>
