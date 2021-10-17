@@ -2,14 +2,12 @@ import {
   convertTextractOutputToMessagesWithPosition,
   extractTextFromDocument,
 } from './conversation/textractClient';
-import { analyzeMessages } from '../bodyguardService/analyzeMessages';
-import * as fs from 'fs';
-import { saveScreenshot } from './saveScreenshot';
 import { buildConversation } from './conversation/buildConversation';
 import { cleanMessages } from './conversation/cleanMessages';
+import { fromBuffer } from 'file-type';
 
-const analyzeScreenshot = async (file: string) => {
-  const data = await extractTextFromDocument(Buffer.from(file, 'binary'));
+const analyzeScreenshot = async (file: Buffer) => {
+  const data = await extractTextFromDocument(file);
   const messagesWithPosition = convertTextractOutputToMessagesWithPosition(
     data,
   );
@@ -30,9 +28,10 @@ const analyzeScreenshot = async (file: string) => {
 export const handler = async (screenshot: string) => {
   console.log('HAHAAHAH');
   console.log(typeof screenshot);
-
+  const file = Buffer.from(screenshot, 'binary');
+  console.log(await fromBuffer(file));
   try {
-    await analyzeScreenshot(screenshot);
+    await analyzeScreenshot(file);
   } catch (error) {
     console.log('Error: ', error);
     throw error;
