@@ -2,6 +2,7 @@
 
 
 # App
+cf [README.md](./app/README.md) in ./app
 
 # Server
 We're using:
@@ -21,3 +22,10 @@ is saved (not done).
 # Next steps
 - AWS Textract pricing is 0.0015$/file. It is actually quite easy to
 locate and extract text from an image using any open-source library (such as Tesseract).
+- The credentials (AWS RDS, AWS Textract) and the server host address which were commited in a hurry should be replaced
+by environment variables (the AWS RDS & AWS EC2 used for demo will be shut down).
+- Notifications treatment should be improved, since many cases will make
+the service fail: many notifications from one or many senders for example
+- iOS app was not made. In addition, iOS does not allow to intercept other app's notifications. Hence,
+only the screenshot feature will work
+- Screenshot should be saved with more information in a safe place.
