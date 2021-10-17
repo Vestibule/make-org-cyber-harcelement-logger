@@ -2,25 +2,17 @@ package org.ncc.monallienumerique
 
 import android.content.Intent
 import android.net.Uri
-import java.net.URI
-
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.Base64
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
-import okhttp3.*
+import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
-import okio.BufferedSink
-import okio.ByteString.Companion.readByteString
-import okio.Okio
-import okio.Source
-import okio.source
-import org.ncc.monallienumerique.JSON
-import java.io.File
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
 import java.io.InputStream
 
 

@@ -28,7 +28,7 @@
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
-        <activity android:name="com.github.chagall.notificationlistenerexample.ShareFileActivity"
+        <activity android:name=".ShareFileActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
