@@ -14,7 +14,7 @@ import { Message } from './message/message.entity';
     UsersModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'ncc.cxf2ypuip1zt.eu-west-3.rds.amazonaws.com/',
+      host: 'ncc.cxf2ypuip1zt.eu-west-3.rds.amazonaws.com',
       port: 5432,
       username: 'postgres',
       password: 'Kt6DcWAhoJCR',
