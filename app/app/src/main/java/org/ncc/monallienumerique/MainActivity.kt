@@ -1,34 +1,15 @@
-package com.github.chagall.notificationlistenerexample
+package org.ncc.monallienumerique
 
 import android.app.AlertDialog
 import android.content.*
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
 import android.text.TextUtils
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 
-/**
- * MIT License
- *
- * Copyright (c) 2016 Fábio Alves Martins Pereira (Chagall)
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
 class MainActivity : AppCompatActivity() {
     private var interceptedNotificationImageView: ImageView? = null
     private var interceptedNotificationTextView: TextView? = null
@@ -54,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         // Finally we register a receiver to tell the MainActivity when a notification has been received
         imageChangeBroadcastReceiver = ImageChangeBroadcastReceiver()
         val intentFilter = IntentFilter()
-        intentFilter.addAction("com.github.chagall.notificationlistenerexample")
+        intentFilter.addAction("org.ncc.monallienumerique")
         registerReceiver(imageChangeBroadcastReceiver, intentFilter)
     }
 

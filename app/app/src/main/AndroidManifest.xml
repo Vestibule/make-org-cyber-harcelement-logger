@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.github.chagall.notificationlistenerexample">
+    package="org.ncc.monallienumerique">
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
@@ -28,7 +28,7 @@
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
-        <activity android:name=".ShareFileActivity"
+        <activity android:name="com.github.chagall.notificationlistenerexample.ShareFileActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
