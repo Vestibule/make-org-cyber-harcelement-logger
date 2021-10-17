@@ -18,17 +18,20 @@ const analyzeScreenshot = async (file: Buffer) => {
   const conversation = buildConversation(cleanMessages(messagesWithPosition));
   console.log('Extracted conversation: ', conversation);
   const analyzedLines = await analyzeMessages(conversation.sender);
-  const inappropriateMessage = analyzedLines.find(
+  const inappropriateMessages = analyzedLines.filter(
     (line) => line.classification === 'HATEFUL',
   );
-  if (inappropriateMessage) {
-    console.log('Screenshot WAS considered as inappropriate.');
-    console.log('Inappropriate message is: ', inappropriateMessage.text);
+  if (inappropriateMessages.length) {
+    console.log('🚨 Screenshot WAS considered as inappropriate! 🚨');
+    console.log(
+      'Inappropriate messages were: ',
+      inappropriateMessages.map((message) => message.text),
+    );
     // TODO: implement saveScreenshot
     await saveScreenshot(file);
     return;
   }
-  console.log('Screenshot WAS NOT considered as inappropriate.');
+  console.log('✅ Screenshot WAS NOT considered as inappropriate. ✅');
   return;
 };
 
